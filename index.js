@@ -1,6 +1,6 @@
 /*
  * @since: 2020-07-18 14:55:09
- * @lastTime: 2020-07-18 16:45:15
+ * @lastTime: 2020-07-18 16:49:10
  * @message: 
  */
 "use strict"
@@ -27,7 +27,7 @@ class Crawler {
         }
     }
 
-    getSongList(url) {
+    getPageList(url) {
         const self = this;
         return new Promise(function (resolve, reject) {
             request(url, function (err, res, body) {
@@ -56,7 +56,7 @@ class Crawler {
                 
             })
     }
-    getSongUrl(page) {
+    getMediaUrl(page) {
         return new Promise(function (resolve, reject) {
             request(page.url, function (err, res, body) {
 
@@ -78,7 +78,7 @@ class Crawler {
             
         })
     }
-    downloadSong(media) {
+    downloadMedia(media) {
         request(media.url)
             .pipe(fs.createWriteStream(path.join(__dirname, "media", media.title + ".mp3")))
             .on("error", function (err) {
@@ -93,17 +93,17 @@ class Crawler {
     async start() {
         this.checkImgPath("media");
 
-        let pageArr = await this.getSongList(opts.baseUrl)
+        let pageArr = await this.getPageList(opts.baseUrl)
 
         for (let index = 0; index < pageArr.length; index++) {
             const page = pageArr[index];
-            let url = await this.getSongUrl(page)
+            let url = await this.getMediaUrl(page)
             if(url){
                 let obj = {
                     title: page.title,
                     url
                 }
-                this.downloadSong(obj)
+                this.downloadMedia(obj)
             }
            
 
