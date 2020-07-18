@@ -1,12 +1,11 @@
 /*
  * @since: 2020-07-18 14:55:09
- * @lastTime: 2020-07-18 16:18:02
+ * @lastTime: 2020-07-18 16:45:15
  * @message: 
  */
 "use strict"
 const fs = require("fs");
 const path = require("path");
-// const async = require("async");
 const request = require("request");
 const colors = require("colors");
 const cheerio = require("cheerio");
@@ -52,7 +51,10 @@ class Crawler {
                     resolve(pageArr)
                 }
             })
-        })
+        }).catch((e)=>{
+            console.log( e)
+                
+            })
     }
     getSongUrl(page) {
         return new Promise(function (resolve, reject) {
@@ -71,6 +73,9 @@ class Crawler {
 
                 }
             })
+        }).catch((e)=>{
+        console.log( e)
+            
         })
     }
     downloadSong(media) {
@@ -90,20 +95,20 @@ class Crawler {
 
         let pageArr = await this.getSongList(opts.baseUrl)
 
-        pageArr.forEach((page) => {
-
-            this.getSongUrl(page).then((url) => {
+        for (let index = 0; index < pageArr.length; index++) {
+            const page = pageArr[index];
+            let url = await this.getSongUrl(page)
+            if(url){
                 let obj = {
                     title: page.title,
                     url
                 }
                 this.downloadSong(obj)
+            }
+           
 
-            }, function (e) {
-                console.log(e)
+        }
 
-            })
-        })
     }
 
 }
