@@ -1,6 +1,6 @@
 /*
  * @since: 2020-07-18 14:55:09
- * @lastTime: 2020-07-18 15:54:23
+ * @lastTime: 2020-07-18 15:56:54
  * @message: 
  */
 "use strict"
@@ -80,11 +80,10 @@ class Crawler {
         request(song.href)
             .pipe(fs.createWriteStream(path.join(__dirname, "media", song.title + ".mp3")))
             .on("error", function (err) {
-                console.log("Crawler -> downloadSong -> error")
-
+                console.log(`${song.title}下载失败`);
             })
             .on("close", () => {
-                console.log(" is downloaded!");
+                console.log(`${song.title}下载成功`);
 
             })
     }
